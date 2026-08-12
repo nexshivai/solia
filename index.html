@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solia — Your happy customers, collected.</title>
+<meta name="description" content="Solia automatically requests, formats, and organizes customer testimonials — ready for your website, sales deck, and case studies. Free to start. Bring your own AI API & billing." />
+<style>
+  :root{
+    --bg:#180a06;
+    --bg-page:#070402;
+    --card:rgba(255,255,255,0.06);
+    --text:#ede4d8;
+    --muted:rgba(235,220,205,0.55);
+    --amber:#ffb36b;
+    --amber-deep:#c25e2a;
+    --radius-card:24px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Neue Haas Unica",Inter,"Segoe UI",Roboto,sans-serif;
+    color:var(--text);
+    background:#070402;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* warm radial background, like the spec */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 65% 55% at 15% 52%, rgba(168,78,10,0.22)),
+      radial-gradient(ellipse 52% 48% at 83% 26%, rgba(122,52,8,0.17)),
+      radial-gradient(ellipse 44% 52% at 56% 92%, rgba(98,36,5,0.14)),
+      radial-gradient(ellipse 30% 30% at 72% 75%, rgba(60,20,5,0.10));
+  }
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:56px 28px 80px}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:8px 0 40px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:20px;color:var(--text)}
+  .logo .mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#ffb36b,#e2702e);color:#3a1405;font-weight:800;font-size:18px;box-shadow:0 6px 22px rgba(226,112,46,.4)}
+  nav .links{display:flex;gap:26px;font-size:15px;color:var(--muted)}
+  nav .links a{color:inherit;text-decoration:none;transition:color .2s}
+  nav .links a:hover{color:var(--text)}
+  .cta{display:flex;gap:12px;align-items:center}
+
+  .glass{background:rgba(255,255,255,0.03);border:none;color:var(--text);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.4);
+    backdrop-filter:blur(2px) saturate(1.3);-webkit-backdrop-filter:blur(2px) saturate(1.3);
+    transition:transform .12s ease;}
+  .glass:active{transform:scale(.96)}
+  .btn{padding:12px 20px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none}
+  .btn-primary{background:linear-gradient(135deg,#ffb36b,#e2702e);color:#3a1405;box-shadow:0 8px 26px rgba(224,112,46,.35)}
+  .btn-ghost{background:rgba(255,255,255,.06)}
+
+  /* HERO */
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:20px 0 60px}
+  .hero h1{font-size:54px;line-height:1.05;font-weight:700;letter-spacing:-1px}
+  .hero h1 .amber{background:linear-gradient(135deg,#ffc285,#e2702e);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{margin:22px 0 30px;font-size:19px;color:var(--muted);max-width:520px;line-height:1.6}
+  .hero .stats{display:flex;gap:34px;margin-top:40px}
+  .hero .stat b{display:block;font-size:30px;color:var(--text)}
+  .hero .stat span{font-size:14px;color:var(--muted)}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+  .badge{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--amber)}
+
+  /* PHONE mockup (from spec) */
+  .phone{width:390px;height:844px;margin:0 auto;background:#000;border-radius:44px;overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06);transform:scale(.8);transform-origin:center}
+  .phone .screen{width:100%;height:100%;background:#180a06;overflow-y:auto;scrollbar-width:none}
+  .phone .screen::-webkit-scrollbar{display:none}
+
+  /* FOOTER */
+  footer{margin-top:70px;padding-top:30px;border-top:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+  @media (max-width:900px){.hero{grid-template-columns:1fr}.phone{margin-top:20px}}
+  @media (max-width:440px){.phone{transform:scale(.6);transform-origin:center top}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo"><span class="mark">S</span> Solia</div>
+    <div class="links"><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#pricing">BYO API</a></div>
+    <div class="cta"><a class="btn btn-ghost" href="#pricing">Log in</a><a class="btn btn-primary" href="#pricing">Start free</a></div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="badge-row"><span class="badge">Free forever plan</span><span class="badge">Bring your own AI API</span></div>
+      <h1>Your happy customers,<br/><span class="amber">collected.</span></h1>
+      <p class="lead">Solia automatically requests, formats, and organizes customer testimonials — ready for your website, store, and socials. Simple enough for a 1-minute setup. Zero monthly surprise.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a class="btn btn-primary" href="#pricing">Get started free</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>80%</b><span>more conversions</span></div>
+        <div class="stat"><b>1 min</b><span>to first wall</span></div>
+        <div class="stat"><b>$0</b><span>to start</span></div>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="screen" style="padding:60px 16px 40px">
+        <div style="text-align:center">
+          <div style="width:88px;height:88px;border-radius:28px;margin:0 auto;background:linear-gradient(135deg,#ffb36b,#e2702e);display:grid;place-items:center;font-size:40px">🏆</div>
+          <div style="font-size:24px;font-weight:500;margin-top:16px">Solia</div>
+          <div style="font-size:15px;color:rgba(235,220,205,.55);margin-top:4px">12 happy customers · Social proof</div>
+        </div>
+        <div style="margin-top:22px">
+          <div style="background:rgba(255,255,255,.06);border-radius:24px;padding:16px;margin-bottom:12px">
+            <div style="font-size:15px;color:#ffd9b0">★★★★★</div>
+            <p style="margin-top:8px;font-size:14px;line-height:1.5">"We cut our demo signups by 60% the week we put our Solia wall live. Setup took minutes."</p>
+            <div style="margin-top:10px;font-size:13px;color:rgba(235,220,205,.55)">— Dasha, Plum Parfait Cafe</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:24px;padding:16px;margin-bottom:12px">
+            <div style="font-size:15px;color:#ffd9b0">★★★★★</div>
+            <p style="margin-top:8px;font-size:14px;line-height:1.5">"Solia turned 12 months of ignored testimonials into an evergreen conversion asset. Free plan was honestly enough."</p>
+            <div style="margin-top:10px;font-size:13px;color:rgba(235,220,205,.55)">— Marcus, RevOps Lead</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:24px;padding:16px">
+            <div style="font-size:15px;color:#ffd9b0">★★★★★</div>
+            <p style="margin-top:8px;font-size:14px;line-height:1.5">"We plugged our own GPT key. No per-seat nonsense. Just our wall, our data, our billing."</p>
+            <div style="margin-top:10px;font-size:13px;color:rgba(235,220,205,.55)">— Yuki, Indie Founder</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" style="padding:40px 0">
+    <h2 style="font-size:34px;margin-bottom:10px">Stop begging. Start collecting.</h2>
+    <p style="color:var(--muted);margin-bottom:30px;max-width:600px">Three steps, no manual follow-ups, no spreadsheet chaos.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" class="how-grid">
+      <div class="glass" style="padding:24px;border-radius:24px"><div style="font-size:26px">✉️</div><h3 style="margin:12px 0 6px;font-size:19px">Request</h3><p style="color:var(--muted);font-size:14px;line-height:1.55">Personalized emails & links to happy customers with our simple before/after/results prompts.</p></div>
+      <div class="glass" style="padding:24px;border-radius:24px"><div style="font-size:26px">🎛️</div><h3 style="margin:12px 0 6px;font-size:19px">Format</h3><p style="color:var(--muted);font-size:14px;line-height:1.55">Every response is auto-turned into a website quote, a one-line pin, and a full story. On brand, every time.</p></div>
+      <div class="glass" style="padding:24px;border-radius:24px"><div style="font-size:26px">🧩</div><h3 style="margin:12px 0 6px;font-size:19px">Organize</h3><p style="color:var(--muted);font-size:14px;line-height:1.55">Searchable by industry, use case, size, persona. One wall you can drop anywhere with a single line.</p></div>
+    </div>
+  </section>
+
+  <section id="pricing" style="padding:40px 0">
+    <h2 style="font-size:34px;margin-bottom:8px">Simple, free-first pricing.</h2>
+    <p style="color:var(--muted);margin-bottom:30px;max-width:600px">No bait-and-switch. The free plan is a real product — and Pro is still a fraction of the big names.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" class="price-grid">
+      <div class="glass" style="padding:28px;border-radius:24px;display:flex;flex-direction:column">
+        <div style="font-weight:600;font-size:18px">Free</div><div style="font-size:40px;font-weight:700;margin:12px 0">$0</div>
+        <ul style="list-style:none;color:var(--muted);font-size:14px;line-height:2"><li>✓ Up to 12 testimonials</li><li>✓ All embed layouts</li><li>✓ Full customization</li><li>✓ Solia branding</li></ul>
+        <a class="btn btn-ghost" style="margin-top:auto;text-align:center" href="#pricing">Start free — no card</a>
+      </div>
+      <div style="padding:28px;border-radius:24px;display:flex;flex-direction:column;background:linear-gradient(160deg,rgba(255,179,107,.12),rgba(255,255,255,.05));border:1px solid rgba(255,179,107,.3)">
+        <div style="font-weight:600;font-size:18px;color:var(--amber)">Pro</div><div style="font-size:40px;font-weight:700;margin:12px 0">$19<span style="font-size:16px;color:var(--muted)">/mo</span></div>
+        <ul style="list-style:none;color:var(--muted);font-size:14px;line-height:2"><li>✓ Unlimited testimonials</li><li>✓ Video + text</li><li>✓ Custom domain & no branding</li><li>✓ Auto-collect workflows</li></ul>
+        <a class="btn btn-primary stripe-btn" style="margin-top:auto;text-align:center" href="#" data-plan="pro" data-price="19">Get Pro · $19/mo</a>
+      </div>
+      <div class="glass" style="padding:28px;border-radius:24px;display:flex;flex-direction:column">
+        <div style="font-weight:600;font-size:18px">BYO API</div><div style="font-size:40px;font-weight:700;margin:12px 0">$5</div>
+        <ul style="list-style:none;color:var(--muted);font-size:14px;line-height:2"><li>✓ Bring your own AI key</li><li>✓ Your billing, your keys</li><li>✓ No vendor lock-in</li><li>✓ Usage-based only</li></ul>
+        <a class="btn btn-ghost stripe-btn" style="margin-top:auto;text-align:center" href="#" data-plan="byo" data-price="5">BYO API · $5</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2025 Solia. Built with warmth.</div>
+    <div style="display:flex;gap:18px"><a style="color:var(--muted)" href="#">Docs</a><a style="color:var(--muted)" href="#">Privacy</a><a style="color:var(--muted)" href="#">GitHub</a></div>
+  </footer>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  /* Stripe wiring for Solia — publishable key from env/config, not hardcoded secret. */
+  const SOLIA_STRIPE_PUBLISHABLE = (typeof process !== 'undefined' && process.env && process.env.STRIPE_PUBLISHABLE_KEY)
+    || window.SOLIA_STRIPE_PUBLISHABLE_KEY || '';
+
+  /* Payment Links: paste the link Stripe generates for each product below.
+     Create them in Stripe Dashboard → Payment Links (Pro = recurring $19/mo, BYO = $5). */
+  const SOLIA_PAYMENT_LINKS = {
+    pro: '', // e.g. 'https://buy.stripe.com/xxx'
+    byo: ''  // e.g. 'https://buy.stripe.com/yyy'
+  };
+
+  document.querySelectorAll('.stripe-btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const plan = this.dataset.plan;
+      const link = SOLIA_PAYMENT_LINKS[plan];
+      if (link) { window.location.href = link; return; }
+      if (window.SOLIA_CHECKOUT) {
+        window.SOLIA_CHECKOUT(plan);
+      } else {
+        alert('Checkout link not configured yet. Set SOLIA_PAYMENT_LINKS in code, or enable the embedded Stripe Checkout backend.');
+      }
+    });
+  });
+
+  /* Optional: embedded Checkout using Stripe.js + publishable key (needs a tiny server to
+     create Checkout Sessions). Kept ready — uncomment when backend is wired. */
+  // if (SOLIA_STRIPE_PUBLISHABLE) {
+  //   const stripe = Stripe(SOLIA_STRIPE_PUBLISHABLE);
+  //   window.SOLIA_CHECKOUT = async function (plan) {
+  //     const res = await fetch('/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({plan}) });
+  //     const { id } = await res.json();
+  //     await stripe.redirectToCheckout({ sessionId: id });
+  //   };
+  // }
+</script>
+</body>
+</html>
