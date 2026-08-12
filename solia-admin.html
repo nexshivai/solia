@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solia Admin — Dashboard</title>
+<style>
+:root{--bg:#180a06;--card:rgba(255,255,255,.06);--text:#ede4d8;--muted:rgba(235,220,205,.55);--amber:#ffb36b;--red:#ff6b6b;--green:#6bffb3}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px 60px}
+header{display:flex;align-items:center;justify-content:space-between;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:28px}
+.logo{font-size:22px;font-weight:700}
+.logo b{color:var(--amber)}
+.badge{font-size:12px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.card{background:var(--card);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,.05)}
+.card h3{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:10px}
+.card .num{font-size:32px;font-weight:700}
+.card .delta{font-size:13px;color:var(--muted);margin-top:4px}
+.card .delta.up{color:var(--green,#6bffb3)}
+.section{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px}
+.panel{background:var(--card);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,.05)}
+.panel h2{font-size:16px;font-weight:600;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--muted);font-weight:500;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+td{padding:10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.tag{font-size:11px;padding:4px 10px;border-radius:999px;font-weight:600}
+.tag.active{background:rgba(107,255,179,.15);color:var(--green,#6bffb3)}
+.tag.trial{background:rgba(255,179,107,.15);color:var(--amber)}
+.tag.past{background:rgba(255,107,107,.15);color:var(--red,#ff6b6b)}
+.status-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:8px}
+.dot.ok{background:#6bff6b}.dot.warn{background:#ffb36b}.dot.err{background:#ff6b6b}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.section{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><b>Solia</b> Admin</div>
+  <div class="badge" id="stripe-status">● Checking Stripe…</div>
+</header>
+
+<div class="grid">
+  <div class="card"><h3>Monthly Recurring Revenue</h3><div class="num" id="mrr">—</div><div class="delta up">Live via Stripe</div></div>
+  <div class="card"><h3>Active Subscribers</h3><div class="num" id="subs">—</div><div class="delta up">Subscriptions</div></div>
+  <div class="card"><h3>Testimonials Collected</h3><div class="num" id="tests">—</div><div class="delta up">From Sheets</div></div>
+  <div class="card"><h3>Free → Pro Conversion</h3><div class="num" id="conv">—</div><div class="delta up">Computed</div></div>
+</div>
+
+<div class="section">
+  <div class="panel">
+    <h2>Recent Payments (Stripe)</h2>
+    <table id="payments-table">
+      <thead><tr><th>Customer</th><th>Plan</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody id="payments-body"><tr><td colspan="4" style="color:var(--muted)">Connect Stripe secret key to load payments…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>System Status</h2>
+    <div class="status-row"><div><span class="dot" id="dot-stripe"></span>Stripe</div><div id="stripe-txt">Setup needed</div></div>
+    <div class="status-row"><div><span class="dot ok"></span>Gmail</div><div>Connected</div></div>
+    <div class="status-row"><div><span class="dot ok"></span>Google Sheets</div><div>Connected</div></div>
+    <div class="status-row"><div><span class="dot warn"></span>Deployment</div><div>Pending push</div></div>
+    <div class="status-row"><div><span class="dot warn"></span>Custom domain</div><div>Not set</div></div>
+  </div>
+</div>
+
+<script>
+  /* Solia Admin — loads payments from a tiny backend endpoint that proxies Stripe.
+     The server uses the SECRET key (never expose it here). See server-example.mjs. */
+  async function loadPayments() {
+    try {
+      const res = await fetch('/api/admin/payments');
+      if (!res.ok) throw new Error('endpoint not configured');
+      const { payments, meta } = await res.json();
+      const tbody = document.getElementById('payments-body');
+      tbody.innerHTML = payments.map(p => `<tr><td>${p.customer}</td><td>${p.plan}</td><td>$${p.amount}</td><td><span class="tag active">${p.status}</span></td></tr>`).join('');
+      document.getElementById('mrr').textContent = '$' + meta.mrr;
+      document.getElementById('subs').textContent = meta.subscribers;
+      document.getElementById('stripe-status').textContent = '● Connected';
+    } catch (e) {
+      document.getElementById('stripe-status').textContent = '● Not connected';
+      document.getElementById('stripe-txt').textContent = 'Set up /api/admin/payments';
+      document.getElementById('dot-stripe').className = 'dot err';
+    }
+  }
+  loadPayments();
+</script>
+</div>
+</body>
+</html>
